@@ -41,4 +41,13 @@ productRouter.get("/shop/search/:name", auth, async (req, res) => {
   }
 });
 
+productRouter.get("/shops", auth, async (req, res) => {
+  try {
+    const shop = await Shop.find({});
+    res.json(shop);
+  } catch (e) {
+    res.status(500).json({ error: e.message });
+  }
+});
+
 module.exports = productRouter;

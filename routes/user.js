@@ -1,14 +1,14 @@
 const express = require("express");
 const userRouter = express.Router();
 const auth = require("../middlewares/auth");
-const Order = require("../models/bills");
+const Bill = require("../models/bill");
 const { Product } = require("../models/product");
 const User = require("../models/user");
 
-userRouter.post("/scanProducts", auth, async (req, res) => {
+userRouter.post("/scanner", auth, async (req, res) => {
   try {
     const { id } = req.body;
-    const product = await Product.findById(id);
+    const product = await Product.findOne({barcode: id});
     let user = await User.findById(req.user);
 
     if (user.cart.length == 0) {
@@ -95,15 +95,15 @@ userRouter.post("/bill", auth, async (req, res) => {
     user.cart = [];
     user = await user.save();
 
-    let order = new Order({
+    let bill = new Bill({
       products,
       totalPrice,
       address,
       userId: req.user,
       orderedAt: new Date().getTime(),
     });
-    order = await order.save();
-    res.json(order);
+    bill = await bill.save();
+    res.json(bill);
   } catch (e) {
     res.status(500).json({ error: e.message });
   }
@@ -111,11 +111,12 @@ userRouter.post("/bill", auth, async (req, res) => {
 
 userRouter.get("/api/orders/me", auth, async (req, res) => {
   try {
-    const orders = await Order.find({ userId: req.user });
-    res.json(orders);
+    const bill = await Bill.find({ userId: req.user });
+    res.json(bill);
   } catch (e) {
     res.status(500).json({ error: e.message });
   }
 });
 
 module.exports = userRouter;
+
