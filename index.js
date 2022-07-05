@@ -5,7 +5,7 @@ const productRouter = require("./routes/product");
 const userRouter = require("./routes/user");
 const PORT = process.env.PORT || 3000;
 const app = express();
-const DB = "mongodb+srv://karthik:hXdILnEkWtdcnuBS@cluster0.vie2q.mongodb.net/?retryWrites=true&w=majority";
+const DB = require("./secrets/secrets.js")
 
 app.use(express.json());
 app.use(authRouter);
@@ -13,7 +13,7 @@ app.use(productRouter);
 app.use(userRouter);
 
 mongoose
-  .connect(DB)
+  .connect(DB.url)
   .then(() => {
     console.log("Database Connected");
   })
