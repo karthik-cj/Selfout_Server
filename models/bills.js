@@ -21,5 +21,5 @@ const billSchema = mongoose.Schema({
   },
 });
 
-const Bill = mongoose.model("Order", orderSchema);
+const Bill = mongoose.model("Bill", billSchema);
 module.exports = Bill;
