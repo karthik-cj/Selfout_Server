@@ -5,7 +5,7 @@ const productRouter = require("./routes/product");
 const userRouter = require("./routes/user");
 const PORT = process.env.PORT || 3000;
 const app = express();
-const DB = "mongodb+srv://karthik:hXdILnEkWtdcnuBS@cluster0.vie2q.mongodb.net/selfout?retryWrites=true&w=majority";
+const DB = "Paste Your DataBase URL Here";
 
 app.use(express.json());
 app.use(authRouter);
