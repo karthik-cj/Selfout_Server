@@ -1,5 +1,5 @@
 #selfout_server
-This is a simple back-end code written in Node Js for a Self Checkout Application.
+This is a simple back-end code written in Node Js for a Self Checking Out Application.
 
 #Description
 Selfout is a Mobile Application build using Flutter , Node Js and Mongodb.
