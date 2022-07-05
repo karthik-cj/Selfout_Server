@@ -28,19 +28,6 @@ const userSchema = mongoose.Schema({
     required: true,
     type: String,
   },
-  type: {
-    type: String,
-    default: "user",
-  },
-  cart: [
-    {
-      product: productSchema,
-      quantity: {
-        type: Number,
-        required: true,
-      },
-    },
-  ],
 });
 
 const User = mongoose.model("User", userSchema);
