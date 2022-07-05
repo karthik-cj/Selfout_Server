@@ -41,7 +41,7 @@ productRouter.get("/shop/search/:name", auth, async (req, res) => {
   }
 });
 
-productRouter.get("/shops", auth, async (req, res) => {
+productRouter.get("/shops",  async (req, res) => {
   try {
     const shop = await Shop.find({});
     res.json(shop);
