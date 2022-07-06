@@ -3,9 +3,10 @@ const mongoose = require("mongoose");
 const authRouter = require("./routes/auth");
 const productRouter = require("./routes/product");
 const userRouter = require("./routes/user");
+const DB = require("./secrets/secrets.js");
 const PORT = process.env.PORT || 3000;
 const app = express();
-const DB = require("./secrets/secrets.js")
+
 
 app.use(express.json());
 app.use(authRouter);

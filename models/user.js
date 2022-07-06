@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-
+const { productSchema } = require("./product");
 const userSchema = new mongoose.Schema({
   username: {
     required: true,
@@ -27,6 +27,15 @@ const userSchema = new mongoose.Schema({
     required: true,
     type: String,
   },
+  recentPurchases: [
+    {
+      product: productSchema,
+      quantity: {
+        type: Number,
+        required: true,
+      }
+    }
+  ]
 });
 
 const User = mongoose.model("User", userSchema);
