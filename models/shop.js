@@ -19,14 +19,9 @@ const shopSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  favourite: {
-    type: Boolean,
-    required: true,
-  },
-  product: [
+  products: [
     {
-      type: String,
-      required: true
+      type: String
     }
   ],
 });

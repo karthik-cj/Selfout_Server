@@ -67,7 +67,7 @@ userRouter.post("/billing/:total", auth, async (req, res) => {     //checkout ch
     let user = await User.findById(req.user);
     let items = user.cart;
     user.cart = [];
-    await user.save();
+    user = await user.save();
     const dt = dateTime.create();
     let datetime = dt.format('d-m-Y\nI:M p');
 
@@ -88,6 +88,28 @@ userRouter.get("/recentpurchases", auth, async (req, res) => {
   try {
     const bill = await Bill.find({ userId: req.user });
     res.json(bill);
+  } catch (e) {
+    res.status(500).json({ error: e.message });
+  }
+});
+
+userRouter.post("/addToFavourite/:id", auth, async (req, res) => {  // Shop id
+  try {
+    const { id } = req.params;
+    let user = await User.findById(req.user);
+    user.favourites.push(id);
+    user = await user.save();
+    res.json(user);
+  } catch (e) {
+    res.status(500).json({ error: e.message });
+  }
+});
+
+userRouter.get("/favourites", auth, async (req, res) => {  
+  try {
+    let user = await User.findById(req.user);
+    fav = user.favourites;
+    res.json(fav);
   } catch (e) {
     res.status(500).json({ error: e.message });
   }

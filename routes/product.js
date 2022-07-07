@@ -21,7 +21,7 @@ productRouter.get("/products/search/:shop/:name", auth, async (req, res) => {
     const products = await Product.find({
       name: { $regex: req.params.name, $options: "i" },
       shop: { $regex: req.params.shop, $options: "i" },
-    });
+    }); 
 
     res.json(products);
   } catch (e) {

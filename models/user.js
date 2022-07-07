@@ -27,6 +27,11 @@ const userSchema = new mongoose.Schema({
     required: true,
     type: String,
   },
+  favourites: [
+    {
+    type: String,
+   }
+  ],
   cart: [
     {
       product: productSchema,
