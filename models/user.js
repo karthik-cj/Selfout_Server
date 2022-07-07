@@ -27,7 +27,7 @@ const userSchema = new mongoose.Schema({
     required: true,
     type: String,
   },
-  recentPurchases: [
+  cart: [
     {
       product: productSchema,
       quantity: {

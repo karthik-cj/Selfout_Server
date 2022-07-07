@@ -19,6 +19,10 @@ const billSchema = new mongoose.Schema({
     required: true,
     type: String,
   },
+  Time: {
+    required: true,
+    type: String,
+  },
 });
 
 const Bill = mongoose.model("Bill", billSchema);
