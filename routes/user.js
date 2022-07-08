@@ -2,6 +2,7 @@ const express = require("express");
 const userRouter = express.Router();
 const auth = require("../middlewares/auth");
 const Bill = require("../models/bill");
+const Shop = require("../models/shop");
 const { Product } = require("../models/product");
 const User = require("../models/user");
 const dateTime = require('node-datetime');
@@ -69,7 +70,7 @@ userRouter.post("/billing/:total", auth, async (req, res) => {     //checkout ch
     user.cart = [];
     user = await user.save();
     const dt = dateTime.create();
-    let datetime = dt.format('d-m-Y\nI:M p');
+    let datetime = dt.format('d-m-Y\nI:M p'); 
 
     let bill = new Bill({
       products: items,
@@ -95,8 +96,9 @@ userRouter.get("/recentpurchases", auth, async (req, res) => {
 
 userRouter.post("/addToFavourite/:id", auth, async (req, res) => {  // Shop id
   try {
-    const { id } = req.params;
     let user = await User.findById(req.user);
+    let shop = await Shop.findById(req.params.id);
+    id = shop.name;
     user.favourites.push(id);
     user = await user.save();
     res.json(user);

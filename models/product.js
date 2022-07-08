@@ -22,7 +22,7 @@ const productSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  shops: [
+  shop: [
     {
       type: String
     }
