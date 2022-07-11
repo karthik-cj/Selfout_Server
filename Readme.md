@@ -8,6 +8,7 @@ Costumers can checkout products they want to purchase from a shop by scanning th
 #installation   
 git clone https://github.com/karthik-cj/selfout_server.git  
 cd selfout_server/  
+configure the database url in index.js file  
 npm install  
 npm run dev || npm start  
 
