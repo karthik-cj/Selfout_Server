@@ -94,13 +94,26 @@ userRouter.get("/recentpurchases", auth, async (req, res) => {
 });
 
 userRouter.post("/addToFavourite/:id", auth, async (req, res) => {
-  // Shop id
   try {
     let user = await User.findById(req.user);
     let shop = await Shop.findById(req.params.id);
     let name = shop.name;
     let images = shop.images;
     user.favourites.push({ name, images });
+    user = await user.save();
+    res.status(200).json(user);
+  } catch (e) {
+    res.status(500).json({ error: e.message });
+  }
+});
+
+userRouter.delete("/removeFromFavourite/:id", auth, async (req, res) => {
+  try {
+    let user = await User.findById(req.user);
+    let shop = await Shop.findById(req.params.id);
+    let name = shop.name;
+    let images = shop.images;
+    user.favourites.pop({ name, images });
     user = await user.save();
     res.status(200).json(user);
   } catch (e) {
