@@ -62,9 +62,11 @@ userRouter.delete("/scanRemove/:id", auth, async (req, res) => {
 });
 
 userRouter.post("/billing/:total", auth, async (req, res) => {
-  //checkout cheyyumboo
   try {
     let user = await User.findById(req.user);
+    if (user.cart.length == 0) {
+      return res.status(400).json({ msg: "Cart Empty" });
+    }
     let items = user.cart;
     user.cart = [];
     user = await user.save();
