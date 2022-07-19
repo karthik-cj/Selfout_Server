@@ -25,7 +25,7 @@ authRouter.post("/signup", async (req, res) => {
       number,
     });
     user = await user.save();
-    res.json(user);
+    res.status(200).json(user);
   } catch (e) {
     res.status(500).json({ error: e.message });
   }
@@ -46,17 +46,12 @@ authRouter.post("/signin", async (req, res) => {
     if (!isMatch) {
       return res.status(400).json({ msg: "Incorrect password." });
     }
-    
+
     const token = jwt.sign({ id: user._id }, "passwordKey");
-    res.json({ token, ...user._doc });
+    res.status(200).json({ token, ...user._doc });
   } catch (e) {
     res.status(500).json({ error: e.message });
   }
-});
-
-authRouter.get("/", auth, async (req, res) => {
-  const user = await User.findById(req.user);
-  res.json({ ...user._doc, token: req.token });
 });
 
 module.exports = authRouter;

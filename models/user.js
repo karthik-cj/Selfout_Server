@@ -29,8 +29,9 @@ const userSchema = new mongoose.Schema({
   },
   favourites: [
     {
-    type: String,
-   }
+      name: String,
+      images: String,
+    },
   ],
   cart: [
     {
@@ -38,9 +39,9 @@ const userSchema = new mongoose.Schema({
       quantity: {
         type: Number,
         required: true,
-      }
-    }
-  ]
+      },
+    },
+  ],
 });
 
 const User = mongoose.model("User", userSchema);
