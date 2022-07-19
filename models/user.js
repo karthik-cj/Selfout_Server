@@ -31,6 +31,7 @@ const userSchema = new mongoose.Schema({
     {
       name: String,
       images: String,
+      location: String,
     },
   ],
   cart: [
