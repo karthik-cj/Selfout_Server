@@ -112,8 +112,11 @@ userRouter.delete("/removeFromFavourite/:id", auth, async (req, res) => {
   try {
     let user = await User.findById(req.user);
     let shop = await Shop.findById(req.params.id);
-    let { name, images, location } = shop;
-    user.favourites.pop({ name, images, location });
+    for (let i = 0; i < user.favourites.length; i++) {
+      if (user.favourites[i].name == shop.name) {
+        user.favourites.splice(i, 1);
+      }
+    }
     user = await user.save();
     res.status(200).json(user);
   } catch (e) {
