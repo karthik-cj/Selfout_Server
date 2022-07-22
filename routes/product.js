@@ -24,6 +24,21 @@ productRouter.get("/products/:shop", auth, async (req, res) => {
   }
 });
 
+productRouter.get("/products/:shop", auth, async (req, res) => {
+  try {
+    let fav = false;
+    let shop = await Shop.findById(req.params.shop);
+    let user = await User.findById(req.user);
+
+    for (let i = 0; i < user.favourites.length; i++) {
+      if (user.favourites[i].name == shop.name) fav = true;
+    }
+    res.status(200).json({ fav: fav });
+  } catch (e) {
+    res.status(500).json({ error: e.message });
+  }
+});
+
 productRouter.get("/products/search/:shop/:name", auth, async (req, res) => {
   try {
     const products = await Product.find({
