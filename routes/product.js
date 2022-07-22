@@ -24,7 +24,7 @@ productRouter.get("/products/:shop", auth, async (req, res) => {
   }
 });
 
-productRouter.get("/products/:shop", auth, async (req, res) => {
+productRouter.get("/product/:shop", auth, async (req, res) => {
   try {
     let fav = false;
     let shop = await Shop.findById(req.params.shop);
