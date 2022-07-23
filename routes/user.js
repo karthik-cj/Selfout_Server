@@ -28,6 +28,7 @@ userRouter.post("/scanAdd/:id", auth, async (req, res) => {
         res.json(product).status(200);
       }
     }
+    res.status(200);
     user = await user.save();
   } catch (e) {
     res.status(400).json({ error: e.message });
