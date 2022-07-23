@@ -92,7 +92,7 @@ userRouter.post("/checkout/:name/:total", auth, async (req, res) => {
   try {
     const { name, total } = req.params;
     let user = await User.findById(req.user);
-    let shop = await Shop.findone({ name });
+    let shop = await Shop.findOne({ name });
     let shopImage = shop.images;
     if (user.cart.length == 0) {
       return res.status(400).json({ msg: "Cart Empty" });
