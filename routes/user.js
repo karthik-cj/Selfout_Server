@@ -77,7 +77,18 @@ userRouter.delete("/removeQuantity/:id", auth, async (req, res) => {
   }
 });
 
-userRouter.post("/billing/:total", auth, async (req, res) => {
+userRouter.get("/emptyCart", auth, async (req, res) => {
+  try {
+    let user = await User.findById(req.user);
+    user.cart = [];
+    user = await user.save();
+    res.status(200).json(user);
+  } catch (e) {
+    res.status(500).json({ error: e.message });
+  }
+});
+
+userRouter.post("/checkout/:total", auth, async (req, res) => {
   try {
     let user = await User.findById(req.user);
     if (user.cart.length == 0) {
