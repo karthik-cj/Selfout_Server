@@ -6,6 +6,13 @@ const Shop = require("../models/shop");
 const { Product } = require("../models/product");
 const User = require("../models/user");
 const dateTime = require("node-datetime");
+// const Razorpay = require("razorpay");
+// var instance = new Razorpay({
+//   key_id: "rzp_test_FkGkioz6Uc6ALb",
+//   key_secret: "5JB5UccJ6DZnjKuvdHQPXRwi",
+// });
+
+// instance.payments.capture(paymentId, amount, currency);
 
 userRouter.post("/scanAdd/:id", auth, async (req, res) => {
   try {
@@ -22,13 +29,7 @@ userRouter.post("/scanAdd/:id", auth, async (req, res) => {
           isProductFound = true;
         }
       }
-
-      if (isProductFound) {
-        let findProduct = user.cart.find((item) =>
-          item.product._id.equals(product._id)
-        );
-        findProduct.quantity += 1;
-      } else {
+      if (!isProductFound) {
         user.cart.push({ product, quantity: 1 });
       }
     }
@@ -39,7 +40,23 @@ userRouter.post("/scanAdd/:id", auth, async (req, res) => {
   }
 });
 
-userRouter.delete("/scanRemove/:id", auth, async (req, res) => {
+userRouter.post("/addQuantity/:id", auth, async (req, res) => {
+  try {
+    const { id } = req.params;
+    const product = await Product.findById(id);
+    let user = await User.findById(req.user);
+    let findProduct = user.cart.find((item) =>
+      item.product._id.equals(product._id)
+    );
+    findProduct.quantity += 1;
+    user = await user.save();
+    res.json({ msg: "Quantity Updated" }).status(200);
+  } catch (e) {
+    res.status(400).json({ error: e.message });
+  }
+});
+
+userRouter.delete("/removeQuantity/:id", auth, async (req, res) => {
   try {
     const { id } = req.params;
     const product = await Product.findById(id);
@@ -61,30 +78,54 @@ userRouter.delete("/scanRemove/:id", auth, async (req, res) => {
   }
 });
 
-userRouter.post("/billing/:total", auth, async (req, res) => {
+userRouter.get("/checkout", auth, async (req, res) => {
   try {
     let user = await User.findById(req.user);
     if (user.cart.length == 0) {
-      return res.status(400).json({ msg: "Cart Empty" });
+      return res.status(500).json({ msg: "Cart Empty" });
     }
-    let items = user.cart;
-    user.cart = [];
-    user = await user.save();
-    const dt = dateTime.create();
-    let datetime = dt.format("d-m-Y\nI:M p");
-
-    let bill = new Bill({
-      products: items,
-      totalPrice: req.params.total,
-      userId: req.user,
-      Time: datetime,
-    });
-    bill = await bill.save();
-    res.status(200).json(bill);
+    let insufficient = "";
+    for (let i = 0; i < user.cart.length; i++) {
+      let product = await Product.findById(user.cart[i].product._id);
+      let stock = product.stock - user.cart[i].quantity;
+      if (stock < 0) {
+        insufficient += `${product.name} `;
+      }
+    }
+    if (!insufficient) return res.status(200).json(user.cart);
+    else
+      return res
+        .status(500)
+        .json({ msg: `Insufficient Stock For : ${insufficient}` });
   } catch (e) {
-    res.status(400).json({ error: e.message });
+    res.status(500).json({ error: e.message });
   }
 });
+
+// userRouter.post("/billing/:total", auth, async (req, res) => {
+//   try {
+//     let user = await User.findById(req.user);
+//     if (user.cart.length == 0) {
+//       return res.status(400).json({ msg: "Cart Empty" });
+//     }
+//     let items = user.cart;
+//     user.cart = [];
+//     user = await user.save();
+//     const dt = dateTime.create();
+//     let datetime = dt.format("d-m-Y\nI:M p");
+
+//     let bill = new Bill({
+//       products: items,
+//       totalPrice: req.params.total,
+//       userId: req.user,
+//       Time: datetime,
+//     });
+//     bill = await bill.save();
+//     res.status(200).json(bill);
+//   } catch (e) {
+//     res.status(400).json({ error: e.message });
+//   }
+// });
 
 userRouter.get("/recentpurchases", auth, async (req, res) => {
   try {

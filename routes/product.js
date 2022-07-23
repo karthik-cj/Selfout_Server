@@ -7,14 +7,6 @@ const User = require("../models/user");
 
 productRouter.get("/products/:shop", auth, async (req, res) => {
   try {
-    // let fav = false;
-    // let shop = await Shop.findById(req.params.shop);
-    // let user = await User.findById(req.user);
-
-    // for (let i = 0; i < user.favourites.length; i++) {
-    //   if (user.favourites[i].name == shop.name) fav = true;
-    // }
-
     const products = await Product.find({
       shop: { $elemMatch: { $eq: req.params.shop } },
     });
