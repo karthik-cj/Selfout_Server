@@ -15,7 +15,8 @@ userRouter.post("/scanAdd/:id", auth, async (req, res) => {
 
     if (user.cart.length == 0) {
       user.cart.push({ product, quantity: 1 });
-      res.json(product).status(200);
+      user = await user.save();
+      return res.json(product).status(200);
     } else {
       let isProductFound = false;
       for (let i = 0; i < user.cart.length; i++) {
@@ -25,11 +26,14 @@ userRouter.post("/scanAdd/:id", auth, async (req, res) => {
       }
       if (!isProductFound) {
         user.cart.push({ product, quantity: 1 });
-        res.json(product).status(200);
+        user = await user.save();
+        return res.json(product).status(200);
+      }
+
+      if (isProductFound) {
+        return res.json().status(200);
       }
     }
-    res.status(200);
-    user = await user.save();
   } catch (e) {
     res.status(400).json({ error: e.message });
   }
