@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 const { productSchema } = require("./product");
 
 const billSchema = new mongoose.Schema({
-  products: [ 
+  products: [
     {
       product: productSchema,
       quantity: {
@@ -16,6 +16,14 @@ const billSchema = new mongoose.Schema({
     required: true,
   },
   userId: {
+    required: true,
+    type: String,
+  },
+  shopName: {
+    required: true,
+    type: String,
+  },
+  shopImage: {
     required: true,
     type: String,
   },

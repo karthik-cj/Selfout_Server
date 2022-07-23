@@ -88,9 +88,12 @@ userRouter.get("/emptyCart", auth, async (req, res) => {
   }
 });
 
-userRouter.post("/checkout/:total", auth, async (req, res) => {
+userRouter.post("/checkout/:name/:total", auth, async (req, res) => {
   try {
+    const { name, total } = req.params;
     let user = await User.findById(req.user);
+    let shop = await Shop.findone({ name });
+    let shopImage = shop.images;
     if (user.cart.length == 0) {
       return res.status(400).json({ msg: "Cart Empty" });
     }
@@ -101,8 +104,10 @@ userRouter.post("/checkout/:total", auth, async (req, res) => {
     let datetime = dt.format("d-m-Y\nI:M p");
 
     let bill = new Bill({
+      shopName: name,
+      shopImage,
       products: items,
-      totalPrice: req.params.total,
+      totalPrice: total,
       userId: req.user,
       Time: datetime,
     });
@@ -116,6 +121,7 @@ userRouter.post("/checkout/:total", auth, async (req, res) => {
 userRouter.get("/recentpurchases", auth, async (req, res) => {
   try {
     const bill = await Bill.find({ userId: req.user });
+
     res.status(200).json(bill);
   } catch (e) {
     res.status(500).json({ error: e.message });
