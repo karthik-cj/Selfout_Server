@@ -7,15 +7,15 @@ const { Product } = require("../models/product");
 const User = require("../models/user");
 const dateTime = require("node-datetime");
 
-userRouter.post("/scanAdd/:id", auth, (req, res) => {
+userRouter.post("/scanAdd/:id", auth, async (req, res) => {
   try {
     const { id } = req.params;
-    const product = Product.findOne({ barcode: id });
-    let user = User.findById(req.user);
+    const product = await Product.findOne({ barcode: id });
+    let user = await User.findById(req.user);
 
     if (user.cart.length == 0) {
       user.cart.push({ product, quantity: 1 });
-      user = user.save();
+      user = await user.save();
       return res.json(product).status(200);
     } else {
       let isProductFound = false;
@@ -26,7 +26,7 @@ userRouter.post("/scanAdd/:id", auth, (req, res) => {
       }
       if (!isProductFound) {
         user.cart.push({ product, quantity: 1 });
-        user = user.save();
+        user = await user.save();
         return res.json(product).status(200);
       }
 
